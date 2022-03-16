@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameSocketService } from 'src/app/services/game-socket.service';
 
 @Component({
   selector: 'app-host',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HostComponent implements OnInit {
 
-  constructor() { }
+  constructor(private gameClient: GameSocketService) { }
 
   ngOnInit(): void {
+    
   }
 
 }

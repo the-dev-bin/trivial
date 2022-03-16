@@ -9,9 +9,9 @@
     </button>
 </div>
 
-<div *ngIf="status === statuses.Client">
+<div *ngIf="status === statuses.Client" class="container">
     <app-client></app-client>
 </div>
-<div *ngIf="status === statuses.Host">
+<div *ngIf="status === statuses.Host" class="container">
     <app-host></app-host>
 </div>

@@ -16,4 +16,30 @@ export class GameSocketService {
   public getMessages(): Observable<any> {
     return this.socket.fromEvent('chat message')
   }
+  public login(): Observable<any> {
+    return this.socket.emit('login')
+  }
+  public loginReturn(): Observable<{
+    "status": string,
+    "user": {
+      name: string,
+      picture: string
+    }
+}> {
+    return this.socket.fromEvent('login');
+  }
+
+  public joinGame() {
+    this.socket.emit('joinGame', 'blah');
+  }
+
+  public choiceChange(): Observable<any> {
+    return this.socket.fromEvent('change');
+  }
+  public changeChoice() {
+    this.socket.emit('change');
+  }
+  public getQuestions() {
+    this.socket.fromEvent('newAnswers');
+  }
 }
