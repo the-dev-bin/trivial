@@ -10,7 +10,7 @@ devserver = "uvicorn --reload trivial.app:app"
 starlette = "*"
 python-socketio = "*"
 websockets = "*"
-names = "*"
+randomname = "*"
 
 [dev-packages]
 uvicorn = "*"
