@@ -6,8 +6,6 @@ RUN pip install pipenv
 
 COPY . /code
 
-RUN pipenv --rm
 RUN pipenv sync --dev
-RUN pipenv run pip freeze
 
-RUN pipenv run devserver
+CMD [ "pipenv", "run", " devserver" ]
