@@ -8,4 +8,4 @@ COPY . /code
 
 RUN pipenv sync --dev
 
-CMD [ "pipenv", "run", " devserver" ]
+CMD [ "pipenv", "run", "devserver" ]
