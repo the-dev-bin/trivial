@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from './components/game/game.component';
 import { CreateComponent } from './components/create/create.component';
-import { HomeComponent } from './components/home/home.component';
 
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
+import { HomeComponent } from "./components/home/home.component";
+import { HostComponent } from './components/game/host/host.component';
+import { ClientComponent } from './components/game/client/client.component';
  
 const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: '/sio/socket.io/'} };
 
@@ -18,7 +20,10 @@ const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: 
     AppComponent,
     GameComponent,
     CreateComponent,
-    HomeComponent
+    HomeComponent,
+    HostComponent,
+    GameComponent,
+    ClientComponent
   ],
   imports: [
     BrowserModule,

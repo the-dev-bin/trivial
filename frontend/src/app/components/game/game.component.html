@@ -1,2 +1,17 @@
-<p>game works!</p>
-<button (click)="test()">Test sockets</button>
+<div *ngIf="!status">
+    <p>game works!</p>
+    <button (click)="test()">Test sockets</button>
+    <button (click)="joinGame()">
+        Join Game
+    </button>
+    <button (click)="startGame()">
+        Start Game
+    </button>
+</div>
+
+<div *ngIf="status === statuses.Client">
+    <app-client></app-client>
+</div>
+<div *ngIf="status === statuses.Host">
+    <app-host></app-host>
+</div>
