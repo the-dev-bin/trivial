@@ -4,8 +4,7 @@ import socketio
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
-
-from models import Trivia, User
+from trivial.models import Trivia, User
 
 # from starlette.staticfiles import StaticFiles
 
