@@ -1,9 +1,9 @@
 import dataclasses
 import logging
 
+import names
 import socketio
 from starlette.applications import Starlette
-import names
 from trivial.models import Choice, Question, Trivia, User
 
 # from starlette.staticfiles import StaticFiles
@@ -56,12 +56,20 @@ def sio_disconnect(sid):
 
 @sio.on("login")
 async def login(sid, msg):
-    name = msg.get("name")
-    if not name:
-        name = names.get_full_name()
-    # TODO: Validate
-    if name:
-        sid_to_user[sid].name = name
+    user = sid_to_user.get(sid)
+    if not user:
+        user = User(
+            name=msg.get("name") or names.get_full_name(),
+            sid=sid,
+            avatar_url=None
+        )
+        sid_to_user[sid] = user
+
+    await sio.emit("login", {
+        "status": "ok",
+        "user": dataclasses.asdict(user)
+    })
+
 
 
 @sio.on("create_trivia")
