@@ -3,6 +3,7 @@ import logging
 
 import socketio
 from starlette.applications import Starlette
+import names
 from trivial.models import Choice, Question, Trivia, User
 
 # from starlette.staticfiles import StaticFiles
@@ -56,6 +57,8 @@ def sio_disconnect(sid):
 @sio.on("login")
 async def login(sid, msg):
     name = msg.get("name")
+    if not name:
+        name = names.get_full_name()
     # TODO: Validate
     if name:
         sid_to_user[sid].name = name
