@@ -1,7 +1,7 @@
 import dataclasses
 import logging
 
-import names
+import randomname
 import socketio
 from starlette.applications import Starlette
 from trivial.models import Choice, Question, Trivia, User
@@ -44,7 +44,7 @@ async def get_user(sid):
 def sio_connect(sid, environ):
     """Track user connection"""
 
-    name = names.get_full_name()
+    name = randomname.get_name().replace('-', ' ').title()
     sid_to_user[sid] = User(
         name=name,
         sid=sid,
