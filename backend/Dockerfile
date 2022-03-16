@@ -8,4 +8,6 @@ COPY . /code
 
 RUN pipenv sync --dev
 
+EXPOSE 8000
+
 CMD [ "pipenv", "run", "devserver" ]

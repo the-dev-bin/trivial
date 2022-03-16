@@ -2,6 +2,7 @@ version: "3.7"  # optional since v1.27.0
 services:
   back:
     build: backend/
+    network_mode: "host"
     ports:
       - "8000:8000"
   frontend:

@@ -11,7 +11,7 @@ import { HomeComponent } from './components/home/home.component';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
  
-const config : SocketIoConfig = { url: 'http://localhost:8000/sio/', options: {path: '/sio/socket.io/'} };
+const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: '/sio/socket.io/'} };
 
 @NgModule({
   declarations: [

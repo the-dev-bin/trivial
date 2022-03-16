@@ -25,7 +25,7 @@ app = Starlette(debug=True)
 #######################
 # Websocket Endpoints #
 #######################
-sio = socketio.AsyncServer(async_mode='asgi')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
 app.mount('/sio', socketio.ASGIApp(sio))
 
 
