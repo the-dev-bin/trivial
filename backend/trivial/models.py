@@ -1,5 +1,6 @@
-from dataclasses import dataclass
-from typing import List
+import uuid
+from dataclasses import dataclass, field
+from typing import Optional
 
 
 @dataclass
@@ -19,8 +20,10 @@ class Choice:
 
 @dataclass
 class Question:
+    uid: uuid.UUID = field(default_factory=uuid.uuid4, init=False)
+
     text: str
-    notes: str
+    notes: Optional[str]
     choices: list[Choice]
 
 
@@ -32,7 +35,9 @@ class Config:
 @dataclass
 class Trivia:
     """A set of trivia challenges"""
+    uid: uuid.UUID = field(default_factory=uuid.uuid4, init=False)
+
     name: str
     owner: User
     config: Config
-    challenges: List[Question]
+    challenges: list[Question]

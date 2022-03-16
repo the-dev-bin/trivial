@@ -6,7 +6,7 @@ sio = socketio.AsyncClient()
 
 
 async def main():
-    future = asyncio.get_running_loop().create_future()
+    future = asyncio.get_event_loop().create_future()
 
     @sio.on('chat message')
     def on_message_received(data):
@@ -19,8 +19,8 @@ async def main():
     print(await sio.emit('create_trivia', {
         "name": "Test",
         "config": {
-          "show_players": True,
-          "timer": None
+            "show_players": True,
+            "timer": None
         },
         "questions": [
             {
