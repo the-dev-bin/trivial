@@ -12,10 +12,6 @@ export class ClientComponent implements OnInit {
   public name = "";
   ngOnInit(): void {
     this.gameSocket.login();
-    this.gameSocket.loginReturn().subscribe(data => {
-      console.log(data.user);
-      this.name = data.user.name;
-    })
   }
   handleClick(answer: string) {
     console.log(answer);

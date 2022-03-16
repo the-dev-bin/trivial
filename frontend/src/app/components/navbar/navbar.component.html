@@ -1,0 +1,5 @@
+<mat-toolbar>
+    <a routerLink="/home">Trivial</a>
+    <div class="spacer"></div>
+    <div *ngIf="userData | async as data">{{ data.user.name}}</div>
+</mat-toolbar>
