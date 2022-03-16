@@ -7,11 +7,25 @@ class User:
     name: str
     # TODO: List of str?
     sid: str
-    api_key: str
+    avatar_url: str = None
 
 
 @dataclass
-class Challenge:
+class Choice:
+    id: int
+    text: str
+    correct: bool
+
+
+@dataclass
+class Question:
+    text: str
+    notes: str
+    choices: list[Choice]
+
+
+@dataclass
+class Config:
     pass
 
 
@@ -20,4 +34,5 @@ class Trivia:
     """A set of trivia challenges"""
     name: str
     owner: User
-    challenges: List[Challenge]
+    config: Config
+    challenges: List[Question]

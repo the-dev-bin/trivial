@@ -16,7 +16,23 @@ async def main():
     message = 20
     await sio.connect('http://localhost:8000', socketio_path='/sio/socket.io/')
     print(f"Client sends: {message}")
-    await sio.emit('chat message', message)
+    print(await sio.emit('create_trivia', {
+        "name": "Test",
+        "config": {
+          "show_players": True,
+          "timer": None
+        },
+        "questions": [
+            {
+                "text": "What is your favorite color?",
+                "choices": [
+                    {"text": "Red", "correct": True},
+                    {"text": "Green"},
+                    {"text": "Yellow"}
+                ]
+            }
+        ]
+    }))
     await asyncio.wait_for(future, timeout=1.0)
     await sio.disconnect()
 
