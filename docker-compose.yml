@@ -5,7 +5,13 @@ services:
     ports:
       - "8000:8000"
   frontend:
-    build: frontend/
+    build:
+      context: ./frontend
+    network_mode: "host"
     ports:
-      - "4200:4200"
+      - 4200:4200
+    container_name: trivia_frontend
+    volumes:
+       - ./frontend:/usr/src/app/frontend
+       - /usr/src/app/chat-ui/node_modules
 

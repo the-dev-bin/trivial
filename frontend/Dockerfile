@@ -1,5 +1,11 @@
-FROM node:latest as node
-WORKDIR /app
-ADD . .
+FROM node:14-alpine
+
+WORKDIR /usr/src/app/frontend
+
+ADD package*.json ./
+
 RUN npm install
-CMD [ "npm", "start" ]
+
+EXPOSE 4200
+
+CMD ["npm", "start"]
