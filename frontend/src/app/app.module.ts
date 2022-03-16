@@ -9,6 +9,10 @@ import { CreateComponent } from './components/create/create.component';
 import { HomeComponent } from './components/home/home.component';
 
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
+ 
+const config : SocketIoConfig = { url: 'http://localhost:8000/sio/', options: {path: '/sio/socket.io/'} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +24,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    SocketIoModule.forRoot(config) 
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameSocketService } from 'src/app/services/game-socket.service';
 
 @Component({
   selector: 'app-game',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  constructor() { }
+  constructor(private socketThing: GameSocketService) { }
 
   ngOnInit(): void {
+    this.socketThing.getMessages().subscribe((data) => {
+      console.log(data);
+    })
   }
-
+  public test() {
+    this.socketThing.sendMessage();
+  }
 }
