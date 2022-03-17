@@ -141,13 +141,13 @@ async def advance_question(sid, msg):
 
     game.advance_question()
 
-    await sio.emit("set_question", {
-        "status": "ok",
-        "question": dataclasses.asdict(game.current_question)
-    }, room=game.game_id)
-
-    # The game is over, send scores
-    if game.current_question is None:
+    if game.current_question:
+        await sio.emit("set_question", {
+            "status": "ok",
+            "question": dataclasses.asdict(game.current_question.question)
+        }, room=game.game_id)
+    else:
+        # The game is over, send scores
         scores = game.get_scores()
         await sio.emit("scores", {
             "scores": {
