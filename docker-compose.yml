@@ -14,5 +14,5 @@ services:
     container_name: trivia_frontend
     volumes:
        - ./frontend:/usr/src/app/frontend
-       - /usr/src/app/chat-ui/node_modules
+       - /usr/src/app/frontend/node_modules
 
