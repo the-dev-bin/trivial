@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { Player } from '../models/player.model';
+import { Answer } from '../models/answer.model';
+import { TriviaGame } from '../models/game.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -77,19 +79,7 @@ export class GameSocketService {
   }
 
 
-  public setQuestionResponse(): Observable<{
-    status: string,
-    question: {
-      uid: string,
-      text: string,
-      notes: string,
-      choices: {
-        id: number,
-        text: string,
-        correct: boolean
-      }[]
-    }
-  }> {
+  public setQuestionResponse(): Observable<TriviaGame> {
     return this.socket.fromEvent('set_question');
   }
 
@@ -100,11 +90,11 @@ export class GameSocketService {
     })
   }
 
-  public answerResponse(): Observable<{
-    "user_id": string,
-    "question": string,
-    "answer": number
-  }> {
+  public answerResponse(): Observable<Answer> {
     return this.socket.fromEvent('set_answer');
+  }
+
+  public playerJoined(): Observable<Player> {
+    return this.socket.fromEvent('add_player');
   }
 }

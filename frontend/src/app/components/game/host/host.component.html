@@ -8,8 +8,8 @@
             <div>{{choice.text}}</div>
         </ng-container>
     </ng-container>
-    <div    *ngFor="let item of things | keyvalue">
-        {{item.key}}:{{item.value}}
+    <div *ngFor="let answer of answers | keyvalue">
+        {{people[answer.key].user.name}}:{{answer.value}}
     </div>
     <button (click)="advanceQuestion()">Advance</button>
 </ng-container>
