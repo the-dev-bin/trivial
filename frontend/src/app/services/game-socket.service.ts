@@ -100,4 +100,7 @@ export class GameSocketService {
   public playerLeft() : Observable<{"user_id": string}> {
     return this.socket.fromEvent('remove_player')
   }
+  public gameEnd(): Observable<any> {
+    return this.socket.fromEvent('game_scores');
+  }
 }

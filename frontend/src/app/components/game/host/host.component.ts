@@ -27,6 +27,9 @@ export class HostComponent implements OnInit {
   ngOnInit(): void {
     this.gameClient.startGame();
     this.gameClient.answerResponse().subscribe(data => {
+      if(this.timeLeft <= 0) {
+        return;
+      }
       console.log(data);
       for (const [key, value] of Object.entries(this.answers)) {
         console.log(`${key}: ${value}`);

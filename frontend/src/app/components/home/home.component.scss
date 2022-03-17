@@ -1,6 +1,9 @@
+.container {
+    display: grid;
+    place-items: center;
+    height: calc(100% - 64px);
+}
 .buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
 }

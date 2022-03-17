@@ -1,8 +1,9 @@
 <ng-container>
-    <div *ngIf="gameID | async as id" class="id">
-        {{id}}
-    </div>
+    
     <ng-container *ngIf="question$ | async as question; else notStarted">
+        <div *ngIf="gameEnd$ | async as gameScores">
+            
+        </div>
         <h1>Question:{{question.question.text | decode}}</h1>
         <h2>{{this.timeLeft}}</h2>
         <button (click)="advanceQuestion()">Advance</button>
@@ -16,7 +17,10 @@
         </div>
     </ng-container>
     <ng-template #notStarted>
-        <button (click)="startGame()" class="start">Start Game</button>
+        <h1 *ngIf="gameID | async as id" class="id">
+            Room Code: {{id}}
+        </h1>
+        <button (click)="startGame()" class="start" mat-raised-button color="primary">Start Game</button>
         <ul class="players">
             <li *ngFor="let player of people | keyvalue">
                 {{player.value.user.name}}
