@@ -1,5 +1,4 @@
 import dataclasses
-import asyncio
 import logging
 from collections import defaultdict
 
@@ -8,9 +7,11 @@ import socketio
 from starlette.routing import Route
 from starlette.responses import JSONResponse
 from starlette.applications import Starlette
+from starlette.responses import PlainTextResponse
+from starlette.routing import Route
 from trivial.models import Choice, Config, Question, Trivia, User
-from trivial.state import TriviaGame
 from trivial.random import get_random_trivia
+from trivial.state import TriviaGame
 
 log = logging.getLogger(__name__)
 
@@ -128,6 +129,8 @@ async def start_game(sid, msg):
     games[game_id] = game
     sessions[sid]["game"] = game
 
+    sio.enter_room(sid, game_id)
+
     await sio.emit("start_game", {
         "status": "ok",
         "game_id": game_id
@@ -136,7 +139,7 @@ async def start_game(sid, msg):
 
 @sio.on("advance_question")
 async def advance_question(sid, msg):
-    game: TriviaGame = sessions[sid]["game"]
+    game: TriviaGame = sessions[sid].get("game")
 
     game.advance_question()
 
@@ -144,6 +147,16 @@ async def advance_question(sid, msg):
         "status": "ok",
         "question": dataclasses.asdict(game.current_question)
     }, room=game.game_id)
+
+    # The game is over, send scores
+    if game.current_question is None:
+        scores = game.get_scores()
+        await sio.emit("scores", {
+            "scores": {
+                sid_to_user[sid].uid: score
+                for sid, score in scores.items()
+            }
+        }, room=game.game_id)
 
 
 ###################
@@ -216,7 +229,7 @@ async def join(sid, msg):
         return
 
     sio.enter_room(sid, game_name)
-    await sio.emit("join", {"status", "ok"})
+    await sio.emit("join", {"status": "ok"})
 
     await sio.emit("add_player", {"user": user.asdict()}, room=game_name)
 
