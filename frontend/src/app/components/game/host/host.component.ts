@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { GameSocketService } from 'src/app/services/game-socket.service';
 import { Player } from '../../../models/player.model'; 
+import { timer } from 'rxjs';
+
 @Component({
   selector: 'app-host',
   templateUrl: './host.component.html',
@@ -14,11 +16,14 @@ export class HostComponent implements OnInit {
   public people: {
     [uid: string]: Player
   } = {};
+  public timeLeft = 0;
   public question$ = this.gameClient.setQuestionResponse();
   public gameID = this.gameClient.gameStart().pipe(map(data=>{    this.gameClient.joinGame(data.game_id); return data.game_id;}));
   public answers : {
     [question_number: number]: Player[]
   } = {}
+  public correctAnswer : number | undefined = -1;
+  public showAnswer = false;
   ngOnInit(): void {
     this.gameClient.startGame();
     this.gameClient.answerResponse().subscribe(data => {
@@ -45,13 +50,26 @@ export class HostComponent implements OnInit {
     })
     this.gameClient.setQuestionResponse().subscribe(data => {
       this.answers = {};
+      this.showAnswer = false;
+      this.correctAnswer = data.question.choices.find(x=> x.correct)?.id
+      this.timeLeft = 10;
     })
   }
   public getGame() {
   }
   public advanceQuestion() {
     this.gameClient.advanceQuestion();
+    let thing = timer(1000, 1000).subscribe(() => {
+      this.timeLeft--;
+      if(this.timeLeft === 0) {
+        this.showAnswer = true;
+        thing.unsubscribe();
+      }
+    });
   }
+  public startGame() {
+    this.advanceQuestion();
 
+  }
 
 }
