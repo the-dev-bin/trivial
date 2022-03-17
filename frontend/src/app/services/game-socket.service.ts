@@ -101,6 +101,6 @@ export class GameSocketService {
     return this.socket.fromEvent('remove_player')
   }
   public gameEnd(): Observable<any> {
-    return this.socket.fromEvent('game_scores');
+    return this.socket.fromEvent('scores');
   }
 }

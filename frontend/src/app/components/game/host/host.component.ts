@@ -24,6 +24,7 @@ export class HostComponent implements OnInit {
   } = {}
   public correctAnswer : number | undefined = -1;
   public showAnswer = false;
+  public gameEnd$ = this.gameClient.gameEnd();
   ngOnInit(): void {
     this.gameClient.startGame();
     this.gameClient.answerResponse().subscribe(data => {
