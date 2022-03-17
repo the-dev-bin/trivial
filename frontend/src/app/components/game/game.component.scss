@@ -1,3 +1,7 @@
 .container {
     height: calc(100% - 64px);
 }
+.buttons {
+    display: grid;
+    place-items: center;
+}

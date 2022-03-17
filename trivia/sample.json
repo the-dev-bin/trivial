@@ -1,0 +1,104 @@
+{
+    "name": "Innovating Trivia",
+    "config": {
+      "show_players": true,
+      "timer": 20
+    },
+    "questions": [
+      {
+        "text": "When the first glue patent was issued, what was the main component?",
+        "choices": [
+          {
+            "text": "Flour",
+            "correct": true
+          },
+          {
+            "text": "Rubber"
+          },
+          {
+            "text": "Fish"
+          },
+          {
+            "text": "Tree sap"
+          }
+        ],
+        "notes": "The patent was issued in 1750."
+      },
+      {
+        "text": "When was Scotch Tape invented?",
+        "choices": [
+          {
+            "text": 1894
+          },
+          {
+            "text": 1886
+          },
+          {
+            "text": 1900
+          },
+          {
+            "text": 1930,
+            "correct": true
+          }
+        ],
+        "notes": "Richard Drew was the inventor."
+      },
+      {
+        "text": "Which company invented the first cassette tape?",
+        "choices": [
+          {
+            "text": "IBM"
+          },
+          {
+            "text": "Samsung"
+          },
+          {
+            "text": "Philips",
+            "correct": true
+          },
+          {
+            "text": "Sony"
+          }
+        ],
+        "notes": "The patent was issued in 1750."
+      },
+      {
+        "text": "In what year was the first telephone book published?",
+        "choices": [
+          {
+            "text": 1954
+          },
+          {
+            "text": 1921
+          },
+          {
+            "text": 1878,
+            "correct": true
+          },
+          {
+            "text": 1906
+          }
+        ],
+        "notes": "The patent was issued in 1750."
+      },
+      {
+        "text": "What was the name of the first crash test dummy?",
+        "choices": [
+          {
+            "text": "Chris"
+          },
+          {
+            "text": "Rob"
+          },
+          {
+            "text": "Tom"
+          },
+          {
+            "text": "Sam",
+            "correct": true
+          }
+        ],
+        "notes": "Sierra Sam was created in 1949."
+      }
+    ]
+  }

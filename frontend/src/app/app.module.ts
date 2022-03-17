@@ -13,7 +13,9 @@ import { HomeComponent } from "./components/home/home.component";
 import { HostComponent } from './components/game/host/host.component';
 import { ClientComponent } from './components/game/client/client.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
- 
+import {MatButtonModule} from '@angular/material/button';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: '/sio/socket.io/'} };
 
 @NgModule({
@@ -32,7 +34,10 @@ const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: 
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
-    SocketIoModule.forRoot(config) 
+    SocketIoModule.forRoot(config) ,
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

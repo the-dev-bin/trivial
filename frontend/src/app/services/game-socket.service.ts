@@ -42,4 +42,11 @@ export class GameSocketService {
   public getQuestions() {
     this.socket.fromEvent('newAnswers');
   }
+
+  public createTrivia(game: string) {
+    this.socket.emit('create_trivia', JSON.parse(game));
+  }
+  public getTrivia() {
+    return this.socket.fromEvent('create_trivia');
+  }
 }

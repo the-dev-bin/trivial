@@ -1,12 +1,15 @@
-<div *ngIf="!status">
-    <p>game works!</p>
-    <button (click)="test()">Test sockets</button>
-    <button (click)="joinGame()">
-        Join Game
-    </button>
-    <button (click)="startGame()">
-        Start Game
-    </button>
+<div *ngIf="!status" class="container buttons">
+    <div>
+        <button (click)="joinGame()" mat-raised-button color="primary">
+            Join Game
+        </button>
+        <br>
+        <br>
+        <button (click)="startGame()" mat-raised-button color="primary">
+            Start Game
+        </button>
+    </div>
+
 </div>
 
 <div *ngIf="status === statuses.Client" class="container">

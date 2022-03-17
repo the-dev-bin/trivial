@@ -9,7 +9,8 @@ import { GameSocketService } from 'src/app/services/game-socket.service';
 export class HostComponent implements OnInit {
 
   constructor(private gameClient: GameSocketService) { }
-
+  public trivia: any;
+  public questions = ['a', 'b', 'c', 'd']
   ngOnInit(): void {
     
   }
