@@ -1,11 +1,12 @@
 import dataclasses
+import asyncio
 import logging
 from collections import defaultdict
 
 import randomname
 import socketio
 from starlette.routing import Route
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse
 from starlette.applications import Starlette
 from trivial.models import Choice, Config, Question, Trivia, User
 from trivial.state import TriviaGame
@@ -29,9 +30,10 @@ sessions = {}
 #######################
 # REST Endpoints      #
 #######################
-def get_trivia(request):
+async def get_trivia(request):
     trivia_length = request.query_params.get('trivia_length', 10)
-    return PlainTextResponse(get_random_trivia(trivia_length))
+    trivia = await get_random_trivia(trivia_length)
+    return JSONResponse(trivia)
 
 
 routes = [
