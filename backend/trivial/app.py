@@ -1,12 +1,12 @@
 import dataclasses
 import logging
+from collections import defaultdict
 
 import randomname
 import socketio
 from starlette.applications import Starlette
-from trivial.models import Choice, Question, Trivia, User
-
-# from starlette.staticfiles import StaticFiles
+from trivial.models import Choice, Config, Question, Trivia, User
+from trivial.state import TriviaGame
 
 log = logging.getLogger(__name__)
 
@@ -16,10 +16,11 @@ log = logging.getLogger(__name__)
 ###################
 
 sid_to_user: dict[str, User] = {}
-# Trivia game definitions
-trivias = {}
 # Active games
 games = {}
+
+# Additional session data
+sessions = {}
 
 
 app = Starlette(debug=True)
@@ -33,13 +34,6 @@ sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
 app.mount('/sio', socketio.ASGIApp(sio))
 
 
-async def get_user(sid):
-    user = sid_to_user.get(sid)
-    if user is None:
-        log.error("User not found for sid %s", sid)
-        await sio.emit({"error": "User not found!"})
-
-
 @sio.on("connect")
 def sio_connect(sid, environ):
     """Track user connection"""
@@ -49,12 +43,18 @@ def sio_connect(sid, environ):
         name=name,
         sid=sid,
     )
+    sessions[sid] = defaultdict(dict)
     log.info("New connection joined. %s => %s", sid, name)
 
 
 @sio.on("disconnect")
-def sio_disconnect(sid):
-    del sid_to_user[sid]
+async def sio_disconnect(sid):
+    user = sid_to_user.pop(sid)
+    _ = sessions.pop(sid)
+    rooms = sio.rooms(sid)
+
+    for room in rooms:
+        await sio.emit("remove_player", {"user_id": user.uid}, room=room)
 
 
 ###########################
@@ -69,8 +69,8 @@ async def create_trivia(sid, msg):
     trivia = Trivia(
         name=name,
         owner=sid_to_user[sid],
-        config=msg["config"],
-        challenges=[
+        config=Config(**msg["config"]),
+        questions=[
             Question(
                 text=question["text"],
                 notes=question.get("notes"),
@@ -85,7 +85,7 @@ async def create_trivia(sid, msg):
         ]
     )
 
-    trivias[name] = trivia
+    sessions[sid]["trivias"][trivia.uid] = trivia
     resp = dataclasses.asdict(trivia)
     print("response: %s", resp)
     await sio.emit("create_trivia", {
@@ -96,7 +96,38 @@ async def create_trivia(sid, msg):
 
 @sio.on("start_game")
 async def start_game(sid, msg):
-    pass
+    # TODO: Generate easy to type, unique game id
+    game_id = "foo"
+    uid = msg["trivia_id"]
+
+    trivia = sessions[sid]["trivias"].get(uid)
+    if not trivia:
+        await sio.emit("start_game", {
+            "status": "error",
+            "message": "Invalid trivia id"
+        })
+        return
+
+    game = TriviaGame(game_id, trivia)
+    games[game_id] = game
+    sessions[sid]["game"] = game
+
+    await sio.emit("start_game", {
+        "status": "ok",
+        "game_id": game_id
+    })
+
+
+@sio.on("advance_question")
+async def advance_question(sid, msg):
+    game: TriviaGame = sessions[sid]["game"]
+
+    game.advance_question()
+
+    await sio.emit("set_question", {
+        "status": "ok",
+        "question": dataclasses.asdict(game.current_question)
+    }, room=game.game_id)
 
 
 ###################
@@ -104,9 +135,9 @@ async def start_game(sid, msg):
 ###################
 
 @sio.on("login")
-async def login(sid, msg):
+async def login(sid, msg={}):
     user = sid_to_user.get(sid)
-    name = msg.get("name") or names.get_full_name()
+    name = msg.get("name") or randomname.get_name().replace('-', ' ').title()
     avatar_url = msg.get("avatar_url")
     if not user:
         user = User(
@@ -127,6 +158,7 @@ async def login(sid, msg):
 
 @sio.on("submit_answer")
 async def submit_answer(sid, msg):
+    user = sid_to_user[sid]
     game_name = msg["game"]
 
     game = games.get(game_name)
@@ -138,19 +170,39 @@ async def submit_answer(sid, msg):
         })
         return
 
-    game.record_answer(sid, msg["answer"])
+    answer = msg["answer"]
+    game.record_answer(sid, answer)
     await sio.emit("submit_answer", {"status", "ok"})
+
+    # Always send to the host
+    await sio.emit("set_answer", {
+        "user_id": user.uid,
+        "question": game.current_question.uid,
+        "answer": answer
+    }, room=game.owner.sid)
+
+    # Only send to the room if players are configured
+    if game.trivia.config.show_players:
+        await sio.emit("set_answer", {
+            "user_id": user.uid,
+            "question": game.current_question.uid,
+            "answer": answer
+        }, room=game, skip_sid=game.owner.sid)
 
 
 @sio.on("join")
 async def join(sid, msg):
+    user = sid_to_user[sid]
     game_name = msg["game"]
 
     if game_name not in games:
         await sio.emit("join", {"status", "error"})
+        return
 
     sio.enter_room(sid, game_name)
     await sio.emit("join", {"status", "ok"})
+
+    await sio.emit("add_player", {"user": user.asdict()}, room=game_name)
 
 
 @sio.on("chat message")
