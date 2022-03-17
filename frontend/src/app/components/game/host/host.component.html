@@ -1,6 +1,15 @@
 <ng-container>
-    <p>Question:</p>
-    <div *ngFor="" class="questions">
-        
+    <div *ngIf="gameID | async as id">
+        {{id}}
     </div>
+    <ng-container *ngIf="question$ | async as question">
+        <p>Question:{{question.question.text}}</p>
+        <ng-container *ngFor="let choice of question.question.choices" class="questions">
+            <div>{{choice.text}}</div>
+        </ng-container>
+    </ng-container>
+    <div    *ngFor="let item of things | keyvalue">
+        {{item.key}}:{{item.value}}
+    </div>
+    <button (click)="advanceQuestion()">Advance</button>
 </ng-container>

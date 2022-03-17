@@ -10,11 +10,14 @@ export class ClientComponent implements OnInit {
 
   constructor(private gameSocket: GameSocketService) { }
   public name = "";
+  public question$ = this.gameSocket.setQuestionResponse();
   ngOnInit(): void {
     this.gameSocket.login();
+    this.gameSocket.joinGame('foo');
   }
-  handleClick(answer: string) {
+  handleClick(answer: number) {
     console.log(answer);
+    this.gameSocket.answer(answer);
   }
 
 }

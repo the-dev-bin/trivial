@@ -7,9 +7,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class GameSocketService {
-
+  public uid: string = '';
   constructor(private socket: Socket) { }
-
   public sendMessage() {
     this.socket.emit('chat message', 'hello world')
   }
@@ -29,8 +28,10 @@ export class GameSocketService {
     return this.socket.fromEvent('login');
   }
 
-  public joinGame() {
-    this.socket.emit('joinGame', 'blah');
+  public joinGame(room: string) {
+    this.socket.emit('join', {
+      game: room
+    });
   }
 
   public choiceChange(): Observable<any> {
@@ -46,7 +47,64 @@ export class GameSocketService {
   public createTrivia(game: string) {
     this.socket.emit('create_trivia', JSON.parse(game));
   }
-  public getTrivia() {
+  public getTrivia(): Observable<{
+    "status": string,
+    "obj": {
+        "uid": string,
+        "name": string,
+    }
+}> {
     return this.socket.fromEvent('create_trivia');
+  }
+  
+  public setUID(id: string) {
+    this.uid = id;
+  }
+  public startGame() {
+    this.socket.emit('start_game', {
+      "trivia_id": this.uid
+    })
+  }
+  public gameStart(): Observable<{
+    status: string,
+    game_id: string
+  }> {
+    return this.socket.fromEvent('start_game');
+  }
+
+  public advanceQuestion() {
+    this.socket.emit('advance_question', {});
+  }
+
+
+  public setQuestionResponse(): Observable<{
+    status: string,
+    question: {
+      uid: string,
+      text: string,
+      notes: string,
+      choices: {
+        id: number,
+        text: string,
+        correct: boolean
+      }[]
+    }
+  }> {
+    return this.socket.fromEvent('set_question');
+  }
+
+  public answer(thing: number) {
+    this.socket.emit('submit_answer', {
+      game: 'foo',
+      answer: thing
+    })
+  }
+
+  public answerResponse(): Observable<{
+    "user_id": string,
+    "question": string,
+    "answer": number
+  }> {
+    return this.socket.fromEvent('set_answer');
   }
 }

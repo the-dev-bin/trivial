@@ -13,13 +13,12 @@ export class CreateComponent implements OnInit {
   constructor(private gameSocket: GameSocketService) { }
   ngOnInit(): void {
     this.gameSocket.getTrivia().subscribe(data => {
-      console.log(data);
+      this.gameSocket.setUID(data.obj.uid)
     })
   }
   gameControl = new FormControl('');
   public createTrivia() {
-    console.log(this.gameControl.value)
     this.gameSocket.createTrivia(this.gameControl.value);
   }
-
+  
 }

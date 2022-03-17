@@ -1,7 +1,5 @@
-<span>{{name}}</span>
-<div class="buttons">
-    <button (click)="handleClick('a')">a</button>
-    <button (click)="handleClick('b')">b</button>
-    <button (click)="handleClick('c')">c</button>
-    <button (click)="handleClick('d')">d</button>
+<div class="buttons" *ngIf="question$ | async as question">
+    <ng-container *ngFor="let choice of question.question.choices">
+        <button (click)="handleClick(choice.id)">{{choice.text}}</button>
+    </ng-container>
 </div>
