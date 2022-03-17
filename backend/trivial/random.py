@@ -1,5 +1,5 @@
 import aiohttp
-import json
+import html
 import random
 
 
@@ -22,11 +22,11 @@ def translate_opentdb(results):
     }
 
     for item in results:
-        choices = [{'text': x} for x in item['incorrect_answers']]
-        choices.append({'text': item['correct_answer'], 'correct': True})
+        choices = [{'text': html.unescape(x)} for x in item['incorrect_answers']]
+        choices.append({'text': html.unescape(item['correct_answer']), 'correct': True})
         random.shuffle(choices)
         trivia['questions'].append({
-            'text': item['question'],
+            'text': html.unescape(item['question']),
             'choices': choices
         })
 
