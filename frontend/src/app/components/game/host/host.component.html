@@ -2,14 +2,20 @@
     <div *ngIf="gameID | async as id">
         {{id}}
     </div>
-    <ng-container *ngIf="question$ | async as question">
-        <p>Question:{{question.question.text}}</p>
-        <ng-container *ngFor="let choice of question.question.choices" class="questions">
-            <div>{{choice.text}}</div>
-        </ng-container>
+    <ng-container *ngIf="question$ | async as question; else notStarted">
+        <p>Question:{{question.question.text | decode}}</p>
+        <button (click)="advanceQuestion()">Advance</button>
+        <div class="questions">
+            <div *ngFor="let choice of question.question.choices" class="question">
+                <h4 class="answer">{{choice.text}}</h4>
+                <div *ngFor="let player of answers[choice.id]" class="player">
+                    {{player.user.name}}
+                </div>
+            </div>
+        </div>
     </ng-container>
-    <div *ngFor="let answer of answers | keyvalue">
-        {{people[answer.key].user.name}}:{{answer.value}}
-    </div>
-    <button (click)="advanceQuestion()">Advance</button>
+    <ng-template #notStarted>
+        <button (click)="advanceQuestion()">Start Game</button>
+
+    </ng-template>
 </ng-container>

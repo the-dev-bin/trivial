@@ -16,6 +16,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {MatButtonModule} from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from "@angular/common/http";
+import { AnswerPipe } from './pipes/answer.pipe';
 const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: '/sio/socket.io/'} };
 
 @NgModule({
@@ -27,7 +28,8 @@ const config : SocketIoConfig = { url: 'http://localhost:8000', options: {path: 
     HostComponent,
     GameComponent,
     ClientComponent,
-    NavbarComponent
+    NavbarComponent,
+    AnswerPipe
   ],
   imports: [
     BrowserModule,
