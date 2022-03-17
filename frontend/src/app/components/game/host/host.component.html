@@ -1,5 +1,5 @@
 <ng-container>
-    <div *ngIf="gameID | async as id">
+    <div *ngIf="gameID | async as id" class="id">
         {{id}}
     </div>
     <ng-container *ngIf="question$ | async as question; else notStarted">
@@ -15,7 +15,11 @@
         </div>
     </ng-container>
     <ng-template #notStarted>
-        <button (click)="advanceQuestion()">Start Game</button>
-
+        <button (click)="advanceQuestion()" class="start">Start Game</button>
+        <ul class="players">
+            <li *ngFor="let player of people | keyvalue">
+                {{player.value.user.name}}
+            </li>
+        </ul>
     </ng-template>
 </ng-container>

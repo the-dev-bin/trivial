@@ -97,4 +97,7 @@ export class GameSocketService {
   public playerJoined(): Observable<Player> {
     return this.socket.fromEvent('add_player');
   }
+  public playerLeft() : Observable<{"user_id": string}> {
+    return this.socket.fromEvent('remove_player')
+  }
 }

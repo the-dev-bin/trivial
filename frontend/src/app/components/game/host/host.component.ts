@@ -40,6 +40,9 @@ export class HostComponent implements OnInit {
       console.log(this.people)
 
     });
+    this.gameClient.playerLeft().subscribe(player => {
+      delete this.people[player.user_id]
+    })
     this.gameClient.setQuestionResponse().subscribe(data => {
       this.answers = {};
     })
