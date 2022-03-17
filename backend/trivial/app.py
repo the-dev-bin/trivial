@@ -4,9 +4,12 @@ from collections import defaultdict
 
 import randomname
 import socketio
+from starlette.routing import Route
+from starlette.responses import PlainTextResponse
 from starlette.applications import Starlette
 from trivial.models import Choice, Config, Question, Trivia, User
 from trivial.state import TriviaGame
+from trivial.random import get_random_trivia
 
 log = logging.getLogger(__name__)
 
@@ -23,9 +26,20 @@ games = {}
 sessions = {}
 
 
-app = Starlette(debug=True)
-# app.mount('/', StaticFiles(directory='static'), name='static')
+#######################
+# REST Endpoints      #
+#######################
+def get_trivia(request):
+    trivia_length = request.query_params.get('trivia_length', 10)
+    return PlainTextResponse(get_random_trivia(trivia_length))
 
+
+routes = [
+    Route('/gen', get_trivia)
+]
+
+app = Starlette(debug=True, routes=routes)
+# app.mount('/', StaticFiles(directory='static'), name='static')
 
 #######################
 # Websocket Endpoints #

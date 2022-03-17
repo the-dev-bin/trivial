@@ -11,6 +11,7 @@ starlette = "*"
 python-socketio = "*"
 websockets = "*"
 randomname = "*"
+requests = "*"
 
 [dev-packages]
 uvicorn = "*"
