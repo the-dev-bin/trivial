@@ -16,10 +16,9 @@ export class HostComponent implements OnInit {
   public things:any = {
 
   }
-  public answers = this.gameClient.answerResponse().pipe(map(data => {this.things[data.user_id] = data.answer}))
   ngOnInit(): void {
     this.gameClient.startGame();
-
+    this.gameClient.answerResponse().subscribe(data => {this.things[data.user_id] = data.answer});
   }
   public getGame() {
   }
