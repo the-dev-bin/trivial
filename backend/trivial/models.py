@@ -14,7 +14,7 @@ class User:
 
     def asdict(self):
         return {
-            "uid": self.name,
+            "uid": self.uid,
             "name": self.name,
             "avatar_url": self.avatar_url
         }

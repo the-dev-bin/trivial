@@ -7,6 +7,9 @@ import socketio
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+
 from trivial.models import Choice, Config, Question, Trivia, User
 from trivial.random import get_random_trivia
 from trivial.state import TriviaGame
@@ -38,14 +41,17 @@ async def get_trivia(request):
 routes = [
     Route('/gen', get_trivia)
 ]
+middleware = [
+    Middleware(CORSMiddleware, allow_origins=['*'])
+]
 
-app = Starlette(debug=True, routes=routes)
+app = Starlette(debug=True, routes=routes, middleware=middleware)
 # app.mount('/', StaticFiles(directory='static'), name='static')
 
 #######################
 # Websocket Endpoints #
 #######################
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins='*')
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=[])
 app.mount('/sio', socketio.ASGIApp(sio))
 
 
