@@ -5,6 +5,8 @@ from typing import Optional
 
 @dataclass
 class User:
+    uid: str = field(default_factory=lambda: str(uuid.uuid4()), init=False)
+
     name: str
     # TODO: List of str?
     sid: str
@@ -20,7 +22,7 @@ class Choice:
 
 @dataclass
 class Question:
-    uid: uuid.UUID = field(default_factory=uuid.uuid4, init=False)
+    uid: str = field(default_factory=lambda: str(uuid.uuid4()), init=False)
 
     text: str
     notes: Optional[str]
@@ -35,7 +37,7 @@ class Config:
 @dataclass
 class Trivia:
     """A set of trivia challenges"""
-    uid: uuid.UUID = field(default_factory=uuid.uuid4, init=False)
+    uid: str = field(default_factory=lambda: str(uuid.uuid4()), init=False)
 
     name: str
     owner: User
