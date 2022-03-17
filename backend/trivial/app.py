@@ -4,10 +4,8 @@ from collections import defaultdict
 
 import randomname
 import socketio
-from starlette.routing import Route
-from starlette.responses import JSONResponse
 from starlette.applications import Starlette
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse
 from starlette.routing import Route
 from trivial.models import Choice, Config, Question, Trivia, User
 from trivial.random import get_random_trivia
@@ -108,7 +106,7 @@ async def create_trivia(sid, msg):
     await sio.emit("create_trivia", {
         "status": "ok",
         "obj": resp
-    })
+    }, room=sid)
 
 
 @sio.on("start_game")
@@ -122,7 +120,7 @@ async def start_game(sid, msg):
         await sio.emit("start_game", {
             "status": "error",
             "message": "Invalid trivia id"
-        })
+        }, room=sid)
         return
 
     game = TriviaGame(game_id, trivia)
@@ -134,7 +132,7 @@ async def start_game(sid, msg):
     await sio.emit("start_game", {
         "status": "ok",
         "game_id": game_id
-    })
+    }, room=sid)
 
 
 @sio.on("advance_question")
@@ -182,7 +180,7 @@ async def login(sid, msg={}):
     await sio.emit("login", {
         "status": "ok",
         "user": dataclasses.asdict(user)
-    })
+    }, room=sid)
 
 
 @sio.on("submit_answer")
@@ -196,12 +194,12 @@ async def submit_answer(sid, msg):
         await sio.emit("submit_answer", {
             "status": "error",
             "message": "No current question active"
-        })
+        }, room=sid)
         return
 
     answer = msg["answer"]
     game.record_answer(sid, answer)
-    await sio.emit("submit_answer", {"status", "ok"})
+    await sio.emit("submit_answer", {"status", "ok"}, room=sid)
 
     # Always send to the host
     await sio.emit("set_answer", {
@@ -225,11 +223,11 @@ async def join(sid, msg):
     game_name = msg["game"]
 
     if game_name not in games:
-        await sio.emit("join", {"status", "error"})
+        await sio.emit("join", {"status", "error"}, room=sid)
         return
 
     sio.enter_room(sid, game_name)
-    await sio.emit("join", {"status": "ok"})
+    await sio.emit("join", {"status": "ok"}, room=sid)
 
     await sio.emit("add_player", {"user": user.asdict()}, room=game_name)
 
