@@ -11,7 +11,7 @@
         <ng-template #gameFunctionality>
             <h1>Question:{{question.question.text | decode}}</h1>
             <h2>{{this.timeLeft}}</h2>
-            <button (click)="advanceQuestion()">Advance</button>
+            <button (click)="advanceQuestion()" mat-raised-button color="primary">Advance</button>
             <div class="questions">
                 <div *ngFor="let choice of question.question.choices" class="question" [ngClass]="{'correct': this.showAnswer && choice.id === this.correctAnswer}">
                     <h4 class="answer">{{choice.text}}</h4>
