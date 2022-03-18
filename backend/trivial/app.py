@@ -205,7 +205,7 @@ async def submit_answer(sid, msg):
 
     answer = msg["answer"]
     game.record_answer(sid, answer)
-    await sio.emit("submit_answer", {"status", "ok"}, room=sid)
+    await sio.emit("submit_answer", {"status": "ok"}, room=sid)
 
     # Always send to the host
     await sio.emit("set_answer", {
@@ -229,7 +229,7 @@ async def join(sid, msg):
     game_name = msg["game"]
 
     if game_name not in games:
-        await sio.emit("join", {"status", "error"}, room=sid)
+        await sio.emit("join", {"status": "error"}, room=sid)
         return
 
     sio.enter_room(sid, game_name)
