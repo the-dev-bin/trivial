@@ -25,6 +25,8 @@ export class HostComponent implements OnInit {
   public correctAnswer : number | undefined = -1;
   public showAnswer = false;
   public gameEnd$ = this.gameClient.gameEnd();
+
+  public timer: any;
   ngOnInit(): void {
     this.gameClient.startGame();
     this.gameClient.answerResponse().subscribe(data => {
@@ -62,12 +64,13 @@ export class HostComponent implements OnInit {
   public getGame() {
   }
   public advanceQuestion() {
+    this.timer?.unsubscribe();
     this.gameClient.advanceQuestion();
-    let thing = timer(1000, 1000).subscribe(() => {
+    this.timer = timer(1000, 1000).subscribe(() => {
       this.timeLeft--;
       if(this.timeLeft === 0) {
         this.showAnswer = true;
-        thing.unsubscribe();
+        this.timer.unsubscribe();
       }
     });
   }

@@ -1,20 +1,26 @@
 <ng-container>
     
     <ng-container *ngIf="question$ | async as question; else notStarted">
-        <div *ngIf="gameEnd$ | async as gameScores">
-            
+        <div *ngIf="gameEnd$ | async as gameScores;else gameFunctionality">
+            <ul>
+                <li *ngFor="let score of gameScores.scores | keyvalue">
+                    {{this.people[score.key]?.user?.name}} : {{score.value}}
+                </li>
+            </ul>
         </div>
-        <h1>Question:{{question.question.text | decode}}</h1>
-        <h2>{{this.timeLeft}}</h2>
-        <button (click)="advanceQuestion()">Advance</button>
-        <div class="questions">
-            <div *ngFor="let choice of question.question.choices" class="question" [ngClass]="{'correct': this.showAnswer && choice.id === this.correctAnswer}">
-                <h4 class="answer">{{choice.text}}</h4>
-                <div *ngFor="let player of answers[choice.id]" class="player">
-                    {{player.user.name}}
+        <ng-template #gameFunctionality>
+            <h1>Question:{{question.question.text | decode}}</h1>
+            <h2>{{this.timeLeft}}</h2>
+            <button (click)="advanceQuestion()">Advance</button>
+            <div class="questions">
+                <div *ngFor="let choice of question.question.choices" class="question" [ngClass]="{'correct': this.showAnswer && choice.id === this.correctAnswer}">
+                    <h4 class="answer">{{choice.text}}</h4>
+                    <div *ngFor="let player of answers[choice.id]" class="player">
+                        {{player.user.name}}
+                    </div>
                 </div>
             </div>
-        </div>
+        </ng-template>
     </ng-container>
     <ng-template #notStarted>
         <h1 *ngIf="gameID | async as id" class="id">
