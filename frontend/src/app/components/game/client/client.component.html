@@ -1,5 +1,18 @@
-<div class="buttons" *ngIf="question$ | async as question">
+<div class="buttons" *ngIf="question$ | async as question; else joinBlock">
     <ng-container *ngFor="let choice of question.question.choices">
         <button (click)="handleClick(choice.id)">{{choice.text}}</button>
     </ng-container>
 </div>
+<ng-template #joinBlock>
+    <ng-container *ngIf="gameJoined; else waitingBlock">
+        <div class="container">
+            Waiting for host to start the game
+        </div>
+    </ng-container>
+    <ng-template #waitingBlock>
+        <div>
+            <input type="text" [formControl]="gameControl">
+            <button (click)="joinGame()"  mat-raised-button color="primary">Join Game</button>
+        </div>
+    </ng-template>
+</ng-template>

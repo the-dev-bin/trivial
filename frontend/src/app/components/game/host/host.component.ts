@@ -25,7 +25,6 @@ export class HostComponent implements OnInit {
   public correctAnswer : number | undefined = -1;
   public showAnswer = false;
   public gameEnd$ = this.gameClient.gameEnd();
-
   public timer: any;
   ngOnInit(): void {
     this.gameClient.startGame();
@@ -76,7 +75,6 @@ export class HostComponent implements OnInit {
   }
   public startGame() {
     this.advanceQuestion();
-
   }
 
 }
