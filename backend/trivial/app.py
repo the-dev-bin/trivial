@@ -1,15 +1,16 @@
 import dataclasses
 import logging
+import random
+import string
 from collections import defaultdict
 
 import randomname
 import socketio
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 from trivial.models import Choice, Config, Question, Trivia, User
 from trivial.random import get_random_trivia
 from trivial.state import TriviaGame
@@ -27,6 +28,17 @@ games = {}
 
 # Additional session data
 sessions = {}
+
+
+def generate_game_id():
+    for _ in range(10000):
+        game_id = "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=5)
+        )
+        if game_id not in games:
+            return game_id
+
+    raise Exception("Could not generate a unique game id!")
 
 
 #######################
@@ -117,8 +129,7 @@ async def create_trivia(sid, msg):
 
 @sio.on("start_game")
 async def start_game(sid, msg):
-    # TODO: Generate easy to type, unique game id
-    game_id = "foo"
+    game_id = generate_game_id()
     uid = msg["trivia_id"]
 
     trivia = sessions[sid]["trivias"].get(uid)
@@ -192,9 +203,8 @@ async def login(sid, msg={}):
 @sio.on("submit_answer")
 async def submit_answer(sid, msg):
     user = sid_to_user[sid]
-    game_name = msg["game"]
 
-    game = games.get(game_name)
+    game = sessions[sid].get("game")
 
     if not game or not game.current_question:
         await sio.emit("submit_answer", {
@@ -228,11 +238,13 @@ async def join(sid, msg):
     user = sid_to_user[sid]
     game_name = msg["game"]
 
-    if game_name not in games:
+    game = games.get(game_name)
+    if game is None:
         await sio.emit("join", {"status": "error"}, room=sid)
         return
 
     sio.enter_room(sid, game_name)
+    sessions[sid]["game"] = game
     await sio.emit("join", {"status": "ok"}, room=sid)
 
     await sio.emit("add_player", {"user": user.asdict()}, room=game_name)
